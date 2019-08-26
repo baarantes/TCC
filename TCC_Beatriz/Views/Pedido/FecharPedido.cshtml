@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Fechar Pedido";
+}
+<div class="form-horizontal">
+
+    <h2>Carrinho</h2>
+
+    <hr />
+    <div class="form-group">
+        <label>CPF Cliente</label>
+        <input type="text" class="form-control" id="txtcpf" />
+    </div>
+    <div class="form-group">
+        <label>Numero Cartão de Crédito</label>
+        <input type="text" class="form-control" id="txtcartaocredito" />
+    </div>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            Codigo Produto
+        </th>
+        <th>
+            Produto
+        </th>
+        <th>
+            Categoria
+        </th>
+        <th>
+            Quantidade
+        </th>
+    </tr>
+
+    @if (Session["carrinho"] != null)
+    {
+        foreach (var item in ((List<TCC_Beatriz.Models.Carrinho>)Session["carrinho"]))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Produto.Codigo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Produto.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Produto.Categoria.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantidade)
+                </td>
+            </tr>
+        }
+    }
+
+
+</table>
+<hr />
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <input type="button" class="btn btn-success" value="Finalizar Pedido" id="btnFinalizar"/>
+    </div>
+</div>
+
+<script>
+    $('#btnFinalizar').click(function () {
+        document.location.href = '/Pedido/Finalizar?cpf='+$('#txtcpf').val() + '&cartaocredito=' + $('#txtcartaocredito').val();
+    });
+</script>

@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Imprimir";
+}
+
+<h2>Imprimir Nota Fiscal</h2>
+
+@{
+    TCC_Beatriz.Models.Pedido pedido = (TCC_Beatriz.Models.Pedido)ViewBag.Pedido;
+    TCC_Beatriz.Models.Pagamento pagamento = (TCC_Beatriz.Models.Pagamento)ViewBag.Pagamento;
+    TCC_Beatriz.Models.Cliente cliente = (TCC_Beatriz.Models.Cliente)ViewBag.Cliente;
+    List<TCC_Beatriz.Models.ItemPedido> itensPedido = (List<TCC_Beatriz.Models.ItemPedido>)ViewBag.ItensPedido;
+}
+
+<p>Pedido Numero: @pedido.Id</p>
+<p>Data: @pedido.Data.ToShortDateString()</p>
+<p>Cliente: @cliente.Nome</p>
+<p>CPF: @cliente.CPF</p>
+<p>Cartão de Crédito: @pagamento.NumeroCartao</p>
+
+<p>Valor: R$ @pagamento.Valor</p>
+
+<table class="table">
+    <tr>
+        <th>
+            Codigo Produto
+        </th>
+        <th>
+            Produto
+        </th>
+        <th>
+            Categoria
+        </th>
+        <th>
+            Quantidade
+        </th>
+    </tr>
+
+    @foreach (var item in itensPedido)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Produto.Codigo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Produto.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Produto.Categoria.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantidade)
+            </td>
+        </tr>
+    }
+
+
+
+</table>
+
+
+<div>
+    <a href="/Pedido/Index">Voltar</a>
+</div>

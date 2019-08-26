@@ -1,0 +1,164 @@
+﻿@model IEnumerable<TCC_Beatriz.Models.Produto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@*<div class="jumbotron">
+        <h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Getting started</h2>
+            <p>
+                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                enables a clean separation of concerns and gives you full control over markup
+                for enjoyable, agile development.
+            </p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Get more libraries</h2>
+            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Web Hosting</h2>
+            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        </div>
+    </div>*@
+
+
+<div class="row">
+    <div class="col">
+        <label>Buscar</label>
+    </div>
+    <div class="col">
+        <input type="text" class="form-control" id="txtBusca" />
+    </div>
+    <div class="col">
+        <input type="button" value="Buscar" id="btnBuscar" class="btn btn-info" />
+    </div>
+    <div class="col">
+        <input type="button" value="Limpar Filtro" id="btnLimpar" class="btn btn-danger" />
+    </div>
+</div>
+
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Codigo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Categoria)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Codigo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categoria.Nome)
+            </td>
+            <td>
+                <input type="button" class="btn btn-success" value="Adicionar" onclick="adicionar(@item.Id, '@item.Nome', '@item.Categoria.Nome')" />
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="modalCarrinho">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar no carrinho</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Código
+                    </dt>
+                    <dd>
+                        <p id="carrinhoCodigo"></p>
+                    </dd>
+                    <dt>
+                        Produto
+                    </dt>
+                    <dd>
+                        <p id="carrinhoProduto"></p>
+                    </dd>
+                    <dt>
+                        Categoria
+                    </dt>
+                    <dd>
+                        <p id="carrinhoCategoria"></p>
+                    </dd>
+                    <dt>
+                        Quantidade
+                    </dt>
+                    <dd>
+                        <input type="number" class="form-control" id="carrinhoQuantidade"/>
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="salvarItemCarrinho()">Adicionar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#btnBuscar').click(function () {
+        document.location.href = "/Home/Index?busca=" + $('#txtBusca').val();
+    })
+
+    $('#btnLimpar').click(function () {
+        document.location.href = "/Home/Index?busca=";
+    })
+
+    function adicionar(id, produto, categoria) {
+        $('#carrinhoProduto').html(produto);
+        $('#carrinhoCodigo').html(id);
+        $('#carrinhoCategoria').html(categoria);
+
+        $('#modalCarrinho').modal('show');
+
+    }
+
+    function salvarItemCarrinho() {
+        var objeto = new Object();
+        objeto.produtoId = $('#carrinhoCodigo').html();
+        objeto.quantidade = $('#carrinhoQuantidade').val();
+
+
+        $.post('/Home/AdicionarCarrinho', objeto, function (e) {
+            $('#modalCarrinho').modal('hide');
+            document.location.href = document.location.href;
+        })
+    }
+
+</script>
